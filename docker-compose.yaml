@@ -1,0 +1,13 @@
+version: '2.1'
+services:
+  dev:
+    build: .
+    depends_on:
+      - elastic
+    volumes:
+      - ./src:/src
+    ports:
+      - 50006:50006
+
+  elastic:
+    image: elasticsearch:6.5.0
