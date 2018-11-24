@@ -2,26 +2,21 @@ import asyncio
 import logging
 import logging.config
 
-
 from vehicle.core.hub import Hub
-from vehicle.core.sink import Sink
 from vehicle.sensors.gps import GPSSensor
+from vehicle.sinks.tcp import TCPSink
 
 
 logger = logging.getLogger(__name__)
 
 
-class DummySink(Sink):
-    name = 'dummy'
-
-    async def submit(self, data):
-        pass
-
-
 def get_hub():
-    hub = Hub(interval_secs=10)
+    hub = Hub(
+        uid='dummy',
+        interval_secs=10,
+    )
     hub.register_sensor(GPSSensor(None))
-    hub.register_sink(DummySink(None))
+    hub.register_sink(TCPSink(None))
     return hub
 
 

@@ -13,9 +13,10 @@ class Hub(object):
     _stop = False
     _last_run = 0
 
-    def __init__(self, interval_secs=300):
+    def __init__(self, uid, interval_secs=300):
         self._sensors = []
         self._sinks = []
+        self.uid = uid
         self.interval = interval_secs
 
     def register_sensor(self, sensor):
@@ -51,6 +52,7 @@ class Hub(object):
 
     async def read_and_write(self, sensor):
         data = await sensor.read()
+        data['uid'] = self.uid
         await asyncio.gather(*[
             sink.write(data) for sink in self._sinks
         ])
