@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import zlib
+from collections import deque
 
 from vehicle.core.sink import Sink
 
@@ -32,11 +33,12 @@ class TCPSink(Sink):
 
     _connected = False
 
-    def __init__(self, host, port, connect_retry_timeout_secs):
+    def __init__(self, host, port, connect_retry_timeout_secs, buffer_size):
         super().__init__()
         self.host = host
         self.port = port
         self.connect_retry_timeout_secs = connect_retry_timeout_secs
+        self.queue = deque(maxlen=buffer_size)
 
     async def start(self):
         self._ensure_connection_future = asyncio.ensure_future(self.ensure_connection())
@@ -50,6 +52,11 @@ class TCPSink(Sink):
         loop = asyncio.get_running_loop()
 
         while True:
+            while self._connected and self.queue:
+                message = self.queue.popleft()
+                self.transport.write(message)
+                logger.debug('Message sent: %s', message)
+
             if self._connected:
                 await asyncio.sleep(0.1)
                 continue
@@ -79,9 +86,6 @@ class TCPSink(Sink):
         return zlib.compress(b)
 
     async def submit(self, data):
-        if not self._connected:
-            logger.warning('No connection, not sending')
-            return
-
         encoded = self.encode(data)
-        self.transport.write(encoded)
+        self.queue.append(encoded)
+        logger.debug('Buffer size: %s', len(self.queue))

@@ -27,6 +27,7 @@ def get_hub(conf):
         host=tcp_sink_conf['host'],
         port=tcp_sink_conf['port'],
         connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
+        buffer_size=tcp_sink_conf['buffer_size'],
     ))
 
     hub.register_sink(FileSink(conf['SINKS']['file']['filename']))

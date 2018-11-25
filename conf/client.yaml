@@ -31,3 +31,4 @@ SINKS:
     host: 127.0.0.1
     port: 5000
     connect_retry_timeout_secs: 30
+    buffer_size: 1000
