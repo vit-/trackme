@@ -22,7 +22,11 @@ def get_hub(conf):
     hub.register_sensor(GPSSensor())
 
     tcp_sink_conf = conf['SINKS']['tcp']
-    hub.register_sink(TCPSink(tcp_sink_conf['host'], tcp_sink_conf['port']))
+    hub.register_sink(TCPSink(
+        host=tcp_sink_conf['host'],
+        port=tcp_sink_conf['port'],
+        connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
+    ))
 
     hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
     return hub

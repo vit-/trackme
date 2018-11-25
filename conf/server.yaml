@@ -3,7 +3,7 @@ LOGGING:
   incremental: False
   disable_existing_loggers: False
   root:
-    level: DEBUG
+    level: INFO
     handlers:
       - console
   handlers:

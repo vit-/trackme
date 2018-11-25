@@ -3,8 +3,6 @@ import json
 import logging
 import zlib
 
-from async_timeout import timeout
-
 from vehicle.core.sink import Sink
 
 
@@ -20,13 +18,12 @@ class ClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self.peer = transport.get_extra_info('peername')
 
-        logger.info('[%s] connected', self.peer)
+        logger.info('[%s] Connected', self.peer)
         self.connected_cb()
 
     def connection_lost(self, exc):
-        logger.info('[%s] disconnected', self.peer)
+        logger.info('[%s] Disconnected', self.peer)
         self.diconnected_cb()
-
 
 
 class TCPSink(Sink):
@@ -35,32 +32,39 @@ class TCPSink(Sink):
 
     _connected = False
 
-    def __init__(self, host, port):
+    def __init__(self, host, port, connect_retry_timeout_secs):
         super().__init__()
         self.host = host
         self.port = port
+        self.connect_retry_timeout_secs = connect_retry_timeout_secs
 
     async def start(self):
-        loop = asyncio.get_running_loop()
-
-        self.transport, _ = await loop.create_connection(
-            lambda: ClientProtocol(
-                connected_cb=self.connection_made,
-                disconnected_cb=self.connection_lost,
-            ),
-            self.host,
-            self.port,
-        )
-        async with timeout(10):
-            await self.wait_for_connection()
+        self._ensure_connection_future = asyncio.ensure_future(self.ensure_connection())
 
     async def stop(self):
+        self._ensure_connection_future.cancel()
         if not self.transport.is_closing():
             self.transport.close()
 
-    async def wait_for_connection(self):
-        while not self._connected:
-            await asyncio.sleep(0.1)
+    async def ensure_connection(self):
+        loop = asyncio.get_running_loop()
+
+        while True:
+            if self._connected:
+                await asyncio.sleep(0.1)
+                continue
+            try:
+                self.transport, _ = await loop.create_connection(
+                    lambda: ClientProtocol(
+                        connected_cb=self.connection_made,
+                        disconnected_cb=self.connection_lost,
+                    ),
+                    self.host,
+                    self.port,
+                )
+            except ConnectionError as exc:
+                logger.error('Failed to connect: %s', exc)
+                await asyncio.sleep(self.connect_retry_timeout_secs)
 
     def connection_made(self):
         self._connected = True
@@ -76,7 +80,7 @@ class TCPSink(Sink):
 
     async def submit(self, data):
         if not self._connected:
-            logger.warning('connection lost, not sending')
+            logger.warning('No connection, not sending')
             return
 
         encoded = self.encode(data)

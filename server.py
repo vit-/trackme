@@ -20,14 +20,14 @@ class ServerProtocol(asyncio.Protocol):
         self.transport = transport
         self.peer = transport.get_extra_info('peername')
 
-        logger.info('[%s] connected', self.peer)
+        logger.info('[%s] Connected', self.peer)
 
     def connection_lost(self, exc):
-        logger.debug('[%s] disconnected exc: %s', self.peer, exc)
-        logger.info('[%s] disconnected', self.peer)
+        logger.debug('[%s] Disconnected exc: %s', self.peer, exc)
+        logger.info('[%s] Disconnected', self.peer)
 
     def data_received(self, data):
-        logger.debug('[%s] received %s bytes: %r', self.peer, len(data), data)
+        logger.debug('[%s] Received %s bytes: %r', self.peer, len(data), data)
         self.received_cb(self.peer, data)
 
 
@@ -38,12 +38,12 @@ def received_cb(peer, data):
         decoded = json.loads(j)
     except ValueError:
         logger.warning(
-            '[%s] invalid data received: %r',
+            '[%s] Invalid data received: %r',
             peer,
             data,
         )
     else:
-        logger.info('[%s] received: %r', peer, decoded)
+        logger.info('[%s] Received: %r', peer, decoded)
 
 
 async def main(host, port):
