@@ -1,8 +1,11 @@
+import argparse
 import asyncio
 import json
 import logging
 import logging.config
 import zlib
+
+import yaml
 
 
 logger = logging.getLogger(__name__)
@@ -43,39 +46,31 @@ def received_cb(peer, data):
         logger.info('[%s] received: %r', peer, decoded)
 
 
-async def main():
+async def main(host, port):
+    logger.info('Serving at %s:%s', host, port)
+
     loop = asyncio.get_running_loop()
     server = await loop.create_server(
         lambda: ServerProtocol(received_cb),
-        '127.0.0.1', 5000
+        host,
+        port,
     )
     async with server:
         await server.serve_forever()
 
 
 if __name__ == '__main__':
-    logging.config.dictConfig({
-        'version': 1,
-        'incremental': False,
-        'disable_existing_loggers': False,
+    parser = argparse.ArgumentParser(description='Run TrackMe server')
+    parser.add_argument(
+        'config',
+        type=str,
+        help='path to config file',
+    )
+    args = parser.parse_args()
 
-        'root': {
-            'level': 'DEBUG',
-            'handlers': [
-                'console',
-            ]
-        },
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'default',
-                'stream': 'ext://sys.stdout',
-            }
-        },
-        'formatters': {
-            'default': {
-                'format': '%(asctime)s %(name)-s[%(process)d]: %(levelname)-8s %(message)s',
-            }
-        }
-    })
-    asyncio.run(main())
+    with open(args.config, 'r') as f:
+        conf = yaml.load(f)
+
+    logging.config.dictConfig(conf['LOGGING'])
+    server_conf = conf['PLAIN_SERVER']
+    asyncio.run(main(server_conf['host'], server_conf['port']))

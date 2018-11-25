@@ -35,6 +35,11 @@ class TCPSink(Sink):
 
     _connected = False
 
+    def __init__(self, host, port):
+        super().__init__()
+        self.host = host
+        self.port = port
+
     async def start(self):
         loop = asyncio.get_running_loop()
 
@@ -43,7 +48,8 @@ class TCPSink(Sink):
                 connected_cb=self.connection_made,
                 disconnected_cb=self.connection_lost,
             ),
-            '127.0.0.1', 5000
+            self.host,
+            self.port,
         )
         async with timeout(10):
             await self.wait_for_connection()

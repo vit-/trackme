@@ -10,10 +10,8 @@ class Sensor(object):
 
     name = None
 
-    def __init__(self, conf):
+    def __init__(self):
         assert self.name, 'Name must be set'
-
-        self.conf = conf
 
     async def start(self):
         pass
