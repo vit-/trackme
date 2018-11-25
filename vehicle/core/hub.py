@@ -25,6 +25,9 @@ class Hub(object):
     def register_sink(self, sink):
         self._sinks.append(sink)
 
+    def set_interval(self, seconds):
+        self.interval = seconds
+
     async def start(self):
         assert self._sensors, 'At least one sensor must be registered'
         assert self._sinks, 'At least one sink must be registered'

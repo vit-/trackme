@@ -7,6 +7,7 @@ import yaml
 
 from vehicle.core.hub import Hub
 from vehicle.sensors.gps import GPSSensor
+from vehicle.sinks.control import ControlSink
 from vehicle.sinks.file import FileSink
 from vehicle.sinks.tcp import TCPSink
 
@@ -29,6 +30,15 @@ def get_hub(conf):
     ))
 
     hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
+
+    ctrl_sink_conf = conf['SINKS']['control']
+    hub.register_sink(ControlSink(
+        set_update_interval_cb=hub.set_interval,
+        stopped_threshold=ctrl_sink_conf['stopped_threshold'],
+        stop_speed=ctrl_sink_conf['stop_speed'],
+        stop_interval_secs=ctrl_sink_conf['stop_interval_secs'],
+        move_interval_secs=ctrl_sink_conf['move_interval_secs'],
+    ))
     return hub
 
 
