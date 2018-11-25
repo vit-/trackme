@@ -7,6 +7,7 @@ import yaml
 
 from vehicle.core.hub import Hub
 from vehicle.sensors.gps import GPSSensor
+from vehicle.sinks.file import FileSink
 from vehicle.sinks.tcp import TCPSink
 
 
@@ -22,6 +23,8 @@ def get_hub(conf):
 
     tcp_sink_conf = conf['SINKS']['tcp']
     hub.register_sink(TCPSink(tcp_sink_conf['host'], tcp_sink_conf['port']))
+
+    hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
     return hub
 
 
