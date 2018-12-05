@@ -10,6 +10,7 @@ from vehicle.sensors.gps import GPSSensor
 from vehicle.sinks.control import ControlSink
 from vehicle.sinks.file import FileSink
 from vehicle.sinks.tcp import TCPSink
+from vehicle.sinks.zmq import ZMQSink
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,12 @@ def get_hub(conf):
         port=tcp_sink_conf['port'],
         connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
         buffer_size=tcp_sink_conf['buffer_size'],
+    ))
+
+    zmq_sink_conf = conf['SINKS']['zmq']
+    hub.register_sink(ZMQSink(
+        host=zmq_sink_conf['host'],
+        port=zmq_sink_conf['port'],
     ))
 
     hub.register_sink(FileSink(conf['SINKS']['file']['filename']))

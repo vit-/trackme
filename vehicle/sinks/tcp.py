@@ -32,6 +32,7 @@ class TCPSink(Sink):
     name = 'tcp'
 
     _connected = False
+    transport = None
 
     def __init__(self, host, port, connect_retry_timeout_secs, buffer_size):
         super().__init__()
@@ -45,7 +46,7 @@ class TCPSink(Sink):
 
     async def stop(self):
         self._ensure_connection_future.cancel()
-        if not self.transport.is_closing():
+        if self.transport and not self.transport.is_closing():
             self.transport.close()
 
     async def ensure_connection(self):

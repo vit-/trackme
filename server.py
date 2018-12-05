@@ -6,6 +6,7 @@ import logging.config
 import zlib
 
 import yaml
+from aiozmq import rpc
 
 
 logger = logging.getLogger(__name__)
@@ -59,6 +60,24 @@ async def main(host, port):
         await server.serve_forever()
 
 
+class Handler(rpc.AttrHandler):
+
+    @rpc.method
+    def tick(self, data):
+        logger.info('Received: %s', data)
+
+
+async def zmq_main(host, port):
+    logger.info('Serving ZMQ at %s:%s', host, port)
+
+    server = await rpc.serve_rpc(
+        Handler(),
+        bind='tcp://%s:%s' % (host, port),
+    )
+    while True:
+        await asyncio.sleep(0.1)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run TrackMe server')
     parser.add_argument(
@@ -73,4 +92,4 @@ if __name__ == '__main__':
 
     logging.config.dictConfig(conf['LOGGING'])
     server_conf = conf['PLAIN_SERVER']
-    asyncio.run(main(server_conf['host'], server_conf['port']))
+    asyncio.run(zmq_main(server_conf['host'], server_conf['port']))
