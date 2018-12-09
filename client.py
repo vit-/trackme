@@ -17,29 +17,29 @@ logger = logging.getLogger(__name__)
 
 def get_hub(conf):
     hub = Hub(
-        uid=conf['HUB']['uid'],
+        db_file=conf['DB_FILE'],
         interval_secs=conf['HUB']['interval_secs'],
     )
     hub.register_sensor(GPSSensor())
 
-    tcp_sink_conf = conf['SINKS']['tcp']
-    hub.register_sink(TCPSink(
-        host=tcp_sink_conf['host'],
-        port=tcp_sink_conf['port'],
-        connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
-        buffer_size=tcp_sink_conf['buffer_size'],
-    ))
-
-    hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
-
-    ctrl_sink_conf = conf['SINKS']['control']
-    hub.register_sink(ControlSink(
-        set_update_interval_cb=hub.set_interval,
-        stopped_threshold=ctrl_sink_conf['stopped_threshold'],
-        stop_speed=ctrl_sink_conf['stop_speed'],
-        stop_interval_secs=ctrl_sink_conf['stop_interval_secs'],
-        move_interval_secs=ctrl_sink_conf['move_interval_secs'],
-    ))
+    # tcp_sink_conf = conf['SINKS']['tcp']
+    # hub.register_sink(TCPSink(
+    #     host=tcp_sink_conf['host'],
+    #     port=tcp_sink_conf['port'],
+    #     connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
+    #     buffer_size=tcp_sink_conf['buffer_size'],
+    # ))
+    #
+    # hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
+    #
+    # ctrl_sink_conf = conf['SINKS']['control']
+    # hub.register_sink(ControlSink(
+    #     set_update_interval_cb=hub.set_interval,
+    #     stopped_threshold=ctrl_sink_conf['stopped_threshold'],
+    #     stop_speed=ctrl_sink_conf['stop_speed'],
+    #     stop_interval_secs=ctrl_sink_conf['stop_interval_secs'],
+    #     move_interval_secs=ctrl_sink_conf['move_interval_secs'],
+    # ))
     return hub
 
 

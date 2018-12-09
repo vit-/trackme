@@ -1,47 +1,48 @@
 import asyncio
+import json
 import logging
 
+from vehicle.core.db import DBMixin
 from vehicle.time import now_utc_ts
 
 
-logger = logging.getLogger('trackme.vehicle.hub')
+logger = logging.getLogger(__name__)
 
 
-class Hub(object):
+class Hub(DBMixin):
 
-    _running = False
     _stop = False
     _last_run = 0
 
-    def __init__(self, uid, interval_secs=300):
-        self._sensors = []
-        self._sinks = []
-        self.uid = uid
+    def __init__(self, db_file, interval_secs):
+        self.db_file = db_file
         self.interval = interval_secs
+
+        self._sensors = []
 
     def register_sensor(self, sensor):
         self._sensors.append(sensor)
 
-    def register_sink(self, sink):
-        self._sinks.append(sink)
-
-    def set_interval(self, seconds):
-        self.interval = seconds
-
     async def start(self):
         assert self._sensors, 'At least one sensor must be registered'
-        assert self._sinks, 'At least one sink must be registered'
 
-        await asyncio.gather(*[i.start() for i in self._sinks])
+        self.init_db()
         await asyncio.gather(*[i.start() for i in self._sensors])
 
     async def stop(self):
         self._stop = True
-        while self._running:
-            await asyncio.sleep(0.1)
 
         await asyncio.gather(*[i.stop() for i in self._sensors])
-        await asyncio.gather(*[i.stop() for i in self._sinks])
+
+    def init_db(self):
+        with self.db as conn:
+            conn.execute(
+                'CREATE TABLE IF NOT EXISTS measurements '
+                '(id  INTEGER CONSTRAINT id_key PRIMARY KEY AUTOINCREMENT , '
+                'data TEXT, '
+                'synced BOOLEAN DEFAULT false)'
+            )
+            conn.commit()
 
     async def run(self):
         while not self._stop:
@@ -55,7 +56,13 @@ class Hub(object):
 
     async def read_and_write(self, sensor):
         data = await sensor.read()
-        data['uid'] = self.uid
-        await asyncio.gather(*[
-            sink.write(data) for sink in self._sinks
-        ])
+        with self.db as conn:
+            conn.execute(
+                'INSERT INTO measurements '
+                '(data) '
+                'VALUES '
+                '(?)',
+
+                (json.dumps(data), ),
+            )
+            conn.commit()

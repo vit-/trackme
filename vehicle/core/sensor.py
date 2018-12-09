@@ -3,7 +3,7 @@ import logging
 from vehicle.time import now_utc_ts
 
 
-logger = logging.getLogger('trackme.vehicle.sensor')
+logger = logging.getLogger(__name__)
 
 
 class Sensor(object):
