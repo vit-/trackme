@@ -1,0 +1,50 @@
+LOGGING:
+  version: 1
+  incremental: False
+  disable_existing_loggers: False
+  root:
+    level: DEBUG
+    handlers:
+      - console
+      - console_errors
+
+  loggers:
+    vehicle.telemetry:
+      level: INFO
+#      propagate: no
+      handlers:
+        - telemetry
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: default
+      stream: ext://sys.stdout
+    console_errors:
+      class: logging.StreamHandler
+      formatter: default
+      stream: ext://sys.stderr
+      level: ERROR
+    telemetry:
+      class: logging.handlers.TimedRotatingFileHandler
+      formatter: plain
+      filename: ./logs/telemetry.txt
+      when: midnight
+      utc: True
+
+  formatters:
+    default:
+      format: '%(asctime)s %(name)-s[%(process)d]: %(levelname)-8s %(message)s'
+    plain:
+      format: '%(message)s'
+
+HUB:
+  device_id: device_123
+  update_interval_secs: 10
+
+CONTROLLERS:
+  speed:
+    stopped_threshold: 10
+    stop_speed: 0.5
+    stop_interval_secs: 600
+    move_interval_secs: 30

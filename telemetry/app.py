@@ -5,11 +5,9 @@ import logging.config
 
 import yaml
 
+from vehicle.controllers.speed import SpeedController
 from vehicle.core.hub import Hub
 from vehicle.sensors.gps import GPSSensor
-from vehicle.sinks.control import ControlSink
-from vehicle.sinks.file import FileSink
-from vehicle.sinks.tcp import TCPSink
 
 
 logger = logging.getLogger(__name__)
@@ -17,34 +15,23 @@ logger = logging.getLogger(__name__)
 
 def get_hub(conf):
     hub = Hub(
-        uid=conf['HUB']['uid'],
-        interval_secs=conf['HUB']['interval_secs'],
+        update_interval_secs=conf['HUB']['update_interval_secs'],
     )
     hub.register_sensor(GPSSensor())
 
-    tcp_sink_conf = conf['SINKS']['tcp']
-    hub.register_sink(TCPSink(
-        host=tcp_sink_conf['host'],
-        port=tcp_sink_conf['port'],
-        connect_retry_timeout_secs=tcp_sink_conf['connect_retry_timeout_secs'],
-        buffer_size=tcp_sink_conf['buffer_size'],
-    ))
-
-    hub.register_sink(FileSink(conf['SINKS']['file']['filename']))
-
-    ctrl_sink_conf = conf['SINKS']['control']
-    hub.register_sink(ControlSink(
-        set_update_interval_cb=hub.set_interval,
+    ctrl_sink_conf = conf['CONTROLLERS']['speed']
+    hub.register_controller(SpeedController(
         stopped_threshold=ctrl_sink_conf['stopped_threshold'],
         stop_speed=ctrl_sink_conf['stop_speed'],
         stop_interval_secs=ctrl_sink_conf['stop_interval_secs'],
         move_interval_secs=ctrl_sink_conf['move_interval_secs'],
     ))
+
     return hub
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Run TrackMe client')
+    parser = argparse.ArgumentParser(description='Run TrackMe telemetry collector')
     parser.add_argument(
         'config',
         type=str,
@@ -53,7 +40,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with open(args.config, 'r') as f:
-        conf = yaml.load(f)
+        conf = yaml.full_load(f)
 
     logging.config.dictConfig(conf['LOGGING'])
 
