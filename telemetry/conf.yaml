@@ -45,6 +45,8 @@ HUB:
 CONTROLLERS:
   speed:
     stopped_threshold: 10
-    stop_speed: 0.5
+    stop_speed: 1.5
     stop_interval_secs: 600
     move_interval_secs: 30
+
+FONA_SERIAL_ADDRESS: /tmp/fona1

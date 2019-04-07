@@ -17,7 +17,7 @@ def get_hub(conf):
     hub = Hub(
         update_interval_secs=conf['HUB']['update_interval_secs'],
     )
-    hub.register_sensor(GPSSensor())
+    hub.register_sensor(GPSSensor(conf['FONA_SERIAL_ADDRESS']))
 
     ctrl_sink_conf = conf['CONTROLLERS']['speed']
     hub.register_controller(SpeedController(
