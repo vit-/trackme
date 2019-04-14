@@ -1,5 +1,5 @@
-from fona.gps import FonaGPS
-from vehicle.core.sensor import Sensor
+from telemetry.fona.gps import FonaGPS
+from telemetry.vehicle.core.sensor import Sensor
 
 
 class GPSSensor(Sensor):

@@ -1,4 +1,4 @@
-from fona.communication import ATCommunicator
+from telemetry.fona.communication import ATCommunicator
 
 
 CGNSINF_FIELDS = (
