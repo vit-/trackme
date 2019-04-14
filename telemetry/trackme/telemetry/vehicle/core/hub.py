@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 
-from telemetry.vehicle.time import now_utc_ts
+from trackme.telemetry.time import now_utc_ts
 
 
 logger = logging.getLogger(__name__)

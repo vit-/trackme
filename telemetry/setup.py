@@ -11,7 +11,7 @@ setup(
     license='MIT',
 
     scripts=['bin/telemetry'],
-    packages=find_packages(include=['telemetry']),
+    packages=find_packages(),
     install_requires=[
         'pyserial',
         'pyyaml',

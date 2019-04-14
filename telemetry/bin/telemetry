@@ -2,14 +2,13 @@
 
 import argparse
 import asyncio
-import logging
 import logging.config
 
 import yaml
 
-from telemetry.vehicle.controllers.speed import SpeedController
-from telemetry.vehicle.core.hub import Hub
-from telemetry.vehicle.sensors.gps import GPSSensor
+from trackme.telemetry.vehicle.controllers.speed import SpeedController
+from trackme.telemetry.vehicle.core.hub import Hub
+from trackme.telemetry.vehicle.sensors.gps import GPSSensor
 
 
 logger = logging.getLogger(__name__)
