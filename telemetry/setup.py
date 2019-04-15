@@ -13,7 +13,7 @@ setup(
     scripts=['bin/telemetry'],
     packages=find_packages(),
     install_requires=[
-        'pyserial',
+        'pyserial-asyncio',
         'pyyaml',
-    ]
+    ],
 )
