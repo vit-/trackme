@@ -3,7 +3,7 @@ import os
 from flask import Flask, current_app, g
 from flask_restful import Api, Resource
 
-from fona.gps import FonaGPS
+from .fona.gps import FonaGPS
 
 
 def get_env_raise(name):
