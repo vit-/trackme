@@ -1,4 +1,4 @@
-from trackme.telemetry.fona.communication import ATCommunicator
+from .communication import ATCommunicator
 
 
 CGNSINF_FIELDS = (
