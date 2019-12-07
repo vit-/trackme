@@ -35,7 +35,14 @@ def close_gps(e=None):
 
 class Gps(Resource):
     def get(self):
-        return get_gps().get_status()
+        status = get_gps().get_status()
+        status['geo'] = {
+            'lat': status['lat'],
+            'lon': status['lon'],
+        }
+        del status['lat']
+        del status['lon']
+        return status
 
 app.teardown_appcontext(close_gps)
 api.add_resource(Gps, '/gps')
