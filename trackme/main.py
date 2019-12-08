@@ -44,8 +44,17 @@ class Gps(Resource):
         del status['lon']
         return status
 
+
+class Health(Resource):
+    def get(self):
+        return {
+            'alive': 1,
+        }
+
+
 app.teardown_appcontext(close_gps)
 api.add_resource(Gps, '/gps')
+api.add_resource(Health, '/health')
 
 
 if __name__ == '__main__':
