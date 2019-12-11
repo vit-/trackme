@@ -1,3 +1,4 @@
+import atexit
 import os
 
 from flask import Flask, current_app, g
@@ -27,10 +28,9 @@ def get_gps():
     return g.gps
 
 
-def close_gps(e=None):
+def close_gps():
     gps = g.pop('gps', None)
     if gps is not None:
-        gps.turn_off()
         gps.close()
 
 
@@ -60,8 +60,8 @@ class Battery(Resource):
             'voltage': int(battery[2]),
         }
 
+atexit.register(close_gps)
 
-app.teardown_appcontext(close_gps)
 api.add_resource(Gps, '/gps')
 api.add_resource(Health, '/health')
 api.add_resource(Battery, '/battery')
