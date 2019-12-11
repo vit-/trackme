@@ -53,7 +53,8 @@ class Health(Resource):
 
 class Battery(Resource):
     def get(self):
-        battery = get_gps()._remove_prefix(gps.cmd('AT+CBC'), '+CBC: ').split(',')
+        gps = get_gps()
+        battery = gps._remove_prefix(gps.cmd('AT+CBC'), '+CBC: ').split(',')
         return {
             'charging': int(battery[0]),
             'level': int(battery[1]),
