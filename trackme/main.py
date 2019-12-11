@@ -48,21 +48,23 @@ class Gps(Resource):
 
 class Health(Resource):
     def get(self):
-        gps = get_gps()
-        battery = gps._remove_prefix(gps.cmd('AT+CBC'), '+CBC: ').split(',')
+        return {'alive': 1}
+
+
+class Battery(Resource):
+    def get(self):
+        battery = get_gps()._remove_prefix(gps.cmd('AT+CBC'), '+CBC: ').split(',')
         return {
-            'alive': 1,
-            'battery': {
-                'status': int(battery[0]),
-                'level': int(battery[1]),
-                'voltage': float(battery[2]),
-            }
+            'charging': int(battery[0]),
+            'level': int(battery[1]),
+            'voltage': int(battery[2]),
         }
 
 
 app.teardown_appcontext(close_gps)
 api.add_resource(Gps, '/gps')
 api.add_resource(Health, '/health')
+api.add_resource(Battery, '/battery')
 
 
 if __name__ == '__main__':
