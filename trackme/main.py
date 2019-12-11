@@ -30,6 +30,7 @@ def get_gps():
 def close_gps(e=None):
     gps = g.pop('gps', None)
     if gps is not None:
+        gps.turn_off()
         gps.close()
 
 
@@ -47,8 +48,15 @@ class Gps(Resource):
 
 class Health(Resource):
     def get(self):
+        gps = get_gps()
+        battery = gps._remove_prefix(gps.cmd('AT+CBC'), '+CBC: ').split(',')
         return {
             'alive': 1,
+            'battery': {
+                'status': int(battery[0]),
+                'level': int(battery[1]),
+                'voltage': float(battery[2]),
+            }
         }
 
 
