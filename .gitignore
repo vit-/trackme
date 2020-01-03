@@ -106,5 +106,7 @@ venv.bak/
 # OS X
 .DS_Store
 
+.idea/
+
 tmp/
 logs/

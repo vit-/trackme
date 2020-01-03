@@ -12,9 +12,6 @@ setup(
 
     packages=find_packages(),
     install_requires=[
-        'flask',
-        'flask-restful',
-        'gunicorn',
         'pyserial',
     ]
 )
