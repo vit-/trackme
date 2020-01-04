@@ -30,6 +30,7 @@ def now_utc_ts():
 
 
 def telemetry(data):
+    data = {f: v for f, v in data.items() if v != ""}
     data['timestamp'] = now_utc_ts()
     telemetry_logger.info(json.dumps(data))
 
