@@ -35,10 +35,11 @@ def telemetry(data):
 
 
 def format_gps_status(status):
-    status['geo'] = {
-        'lat': status['lat'],
-        'lon': status['lon'],
-    }
+    if status['lat'] and status['lon']:
+        status['geo'] = {
+            'lat': status['lat'],
+            'lon': status['lon'],
+        }
     del status['lat']
     del status['lon']
     return status
