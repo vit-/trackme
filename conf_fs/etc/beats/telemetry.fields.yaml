@@ -1,0 +1,41 @@
+- key: "telemetry"
+  title: "Trackme telemetry"
+  description: "Trackme telemetry"
+  short_config: true
+  fields:
+    - name: @timestamp
+      type: date
+    - name: geo
+      type: geo_point
+    - name: gps_status
+      type: integer
+    - name: fix_status
+      type: integer
+    - name: utc_timestr
+      type: date
+    - name: alt
+      type: float
+    - name: speed
+      type: float
+    - name: course
+      type: float
+    - name: fix_mode
+      type: integer
+    - name: hdop
+      type: float
+    - name: pdop
+      type: float
+    - name: vdop
+      type: float
+    - name: gps_sattelites_cnt
+      type: integer
+    - name: gnss_sattelites_cnt
+      type: integer
+    - name: glonass_sattelites_cnt
+      type: integer
+    - name: c_n0_max
+      type: integer
+    - name: hpa
+      type: float
+    - name: vpa
+      type: float

@@ -1,0 +1,14 @@
+fields:
+  vehicle: car
+
+setup.kibana:
+  host: exapmle.com:443
+  protocol: https
+  username: trackme
+  password: "secret"
+
+output.elasticsearch:
+  hosts: ["example.com:443"]
+  protocol: https
+  username: trackme
+  password: "secret"

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='trackme',
-    description='TrackMe API server',
+    description='TrackMe Telemetry collector',
     version='0.1.0',
 
     author='Vitalii Vokhmin',

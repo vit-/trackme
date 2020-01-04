@@ -107,6 +107,4 @@ venv.bak/
 .DS_Store
 
 .idea/
-
-tmp/
-logs/
+beats.personal.yaml

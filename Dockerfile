@@ -1,9 +1,9 @@
-FROM python:3.5
+FROM python:3.5-stretch
 
-WORKDIR /usr/src/app
+WORKDIR /opt/trackme
 
-ADD requirements.txt .
+ADD src/requirements.txt .
 RUN pip install -r requirements.txt
 
 ADD . .
-RUN pip install -e .
+RUN pip install -e src/
