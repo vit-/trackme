@@ -1,5 +1,5 @@
 install-mux:
-	@echo "TODO: fetch mux binary"
+	curl -L -o /usr/sbin/gsmMuxd https://github.com/vit-/gsmmux/releases/download/v1.0/gsmMuxd
 
 install-filebeat:
 	curl -L -o /usr/sbin/filebeat https://github.com/vit-/trackme/releases/download/v7.5.1/filebeat
