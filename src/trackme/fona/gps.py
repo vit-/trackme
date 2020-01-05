@@ -2,8 +2,8 @@ from .communication import ATCommunicator
 
 
 CGNSINF_FIELDS = (
-    ('gps_status', str),
-    ('fix_status', str),
+    ('gps_status', int),
+    ('fix_status', int),
     ('utc_timestr', str),
     ('lat', float),
     ('lon', float),

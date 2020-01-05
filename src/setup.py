@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='trackme',
-    description='TrackMe API server',
-    version='0.1.0',
+    description='TrackMe Telemetry collector',
+    version='1.0.0',
 
     author='Vitalii Vokhmin',
     author_email='vitaliy.vokhmin@gmail.com',
@@ -12,9 +12,6 @@ setup(
 
     packages=find_packages(),
     install_requires=[
-        'flask',
-        'flask-restful',
-        'gunicorn',
         'pyserial',
     ]
 )

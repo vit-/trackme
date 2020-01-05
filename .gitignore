@@ -106,5 +106,5 @@ venv.bak/
 # OS X
 .DS_Store
 
-tmp/
-logs/
+.idea/
+beats.personal.yaml

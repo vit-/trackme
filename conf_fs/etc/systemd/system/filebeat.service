@@ -1,0 +1,14 @@
+[Unit]
+Description=Filebeat
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+User=pi
+ExecStart=/usr/sbin/filebeat -c /etc/beats/filebeat.yaml run
+
+[Install]
+WantedBy=multi-user.target
