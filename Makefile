@@ -17,7 +17,7 @@ install-tools:
 	apt-get install -y fail2ban screen tmux ppp vim python3-pip
 	apt-get clean
 
-install-all: install-mux install-filebeat install-metricbeat install-trackme install-tools
+install-all: install-tools install-mux install-filebeat install-metricbeat install-trackme
 
 config-initial:
 	cp -r conf_fs/* /
