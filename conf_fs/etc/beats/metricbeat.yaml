@@ -3,11 +3,7 @@ path.home: /var/beats/metricbeat
 metricbeat.modules:
 - module: system
   metricsets:
-    - cpu
-    - load
-    - memory
-    - network
     - filesystem
   enabled: true
-  period: 10s
-  cpu.metrics: ["percentages"]
+  period: 5m
+
