@@ -25,8 +25,7 @@ def main(device, interval):
 
 
 def now_utc_ts():
-    now = datetime.utcnow()
-    return int(time.mktime(now.timetuple()))
+    return int(time.time())
 
 
 def telemetry(data):
